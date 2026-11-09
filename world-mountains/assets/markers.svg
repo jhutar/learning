@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500">
+  <!-- Placeholder ellipses at rough real positions (equirectangular, viewBox 1000x500).
+       Replace with your own art; keep ids el-1..el-N matching app.js RANGES. -->
+  <ellipse id="el-1" cx="742" cy="172" rx="26" ry="14"/>
+  <ellipse id="el-2" cx="306" cy="292" rx="16" ry="30"/>
+  <ellipse id="el-3" cx="178" cy="111" rx="24" ry="22"/>
+  <ellipse id="el-4" cx="667" cy="92" rx="20" ry="18"/>
+  <ellipse id="el-5" cx="528" cy="122" rx="24" ry="12"/>
+</svg>

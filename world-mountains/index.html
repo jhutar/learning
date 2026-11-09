@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Mountains Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>World Mountains Trainer</h1>
+    <div id="stats" aria-live="polite">
+      <span id="stat-pass">&#10003; 0</span>
+      <span id="stat-fail">&#10007; 0</span>
+    </div>
+    <button id="btn-new-session" type="button">New session</button>
+  </header>
+
+  <main>
+    <div id="map-container">
+      <img id="map-image" src="assets/world-map.jpg" alt="World map">
+      <div id="markers"></div>
+    </div>
+    <p id="question" class="question"></p>
+    <div id="choices" class="choices"></div>
+    <button id="btn-next" type="button" hidden>Next</button>
+  </main>
+
+  <div id="overlay" hidden>
+    <div id="overlay-box">
+      <h2>Session complete!</h2>
+      <p id="overlay-stats"></p>
+      <button id="btn-restart" type="button">New session</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
