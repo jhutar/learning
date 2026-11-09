@@ -65,6 +65,14 @@ header button {
   height: 100%;
 }
 
+/* HTML layer above the SVG for answer animations (ring/pop divs) */
+#fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 #markers ellipse {
   /* no fill, stroke-only markers */
   fill: none;
@@ -104,16 +112,15 @@ header button {
 }
 
 .ring {
-  fill: none;
-  stroke: #2ea44f;
-  stroke-width: 3;
-  transform-box: fill-box;
-  transform-origin: center;
+  position: absolute;
+  border-style: solid;
+  border-color: #2ea44f;
+  border-radius: 50%;
   animation: ring 0.7s ease-out forwards;
 }
 
 .ring-wrong {
-  stroke: #e03c3c;
+  border-color: #e03c3c;
 }
 
 @keyframes ring {
@@ -128,30 +135,29 @@ header button {
 }
 
 .pop {
-  font-size: 30px;
+  position: absolute;
   font-weight: bold;
-  fill: #2ea44f;
-  text-anchor: middle;
-  transform-box: fill-box;
-  transform-origin: center;
+  color: #2ea44f;
+  white-space: nowrap;
+  line-height: 1;
   animation: pop 0.7s ease-out forwards;
 }
 
 .pop-wrong {
-  fill: #e03c3c;
+  color: #e03c3c;
 }
 
 @keyframes pop {
   0% {
-    transform: scale(0.3);
+    transform: translate(-50%, -50%) scale(0.3);
     opacity: 0;
   }
   30% {
-    transform: scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
     opacity: 1;
   }
   100% {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
 }

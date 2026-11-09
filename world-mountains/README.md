@@ -135,7 +135,7 @@ emits `rotate(θ)` around the origin, which flings the ellipse off-canvas.
 |---|---|
 | `index.html` | Static page: header (stats + New session), map container (SVG only, no `<img>`), question bar, choice buttons, Next button, end overlay |
 | `app.js` | All game logic. `RANGES` array + tunables (`ASKS_PER_RANGE`, `RETRY_GAP`, `CHOICE_COUNT`, `CORRECT_MS`) at top. State machine in `startSession` / `nextQuestion` / `handleAnswer` / `scheduleRetry` / `decrementPending` / `checkSessionEnd` |
-| `styles.css` | Layout + ellipse state classes (`candidate`, `dim`, `highlight`, `wrong`, `reveal`) + correct/wrong animations (`ring`, `pop`) |
+| `styles.css` | Layout + ellipse state classes (`candidate`, `dim`, `highlight`, `wrong`, `reveal`) + fx overlay (`#fx-layer`, `ring`, `pop` animations) |
 | `assets/world-map.jpg` | Background map, embedded **inside** `markers.svg` via `<image xlink:href="world-map.jpg">` (1331x688). Not loaded separately by HTML |
 | `assets/markers.svg` | Map image + stroke-only ellipses (no fill). Keep `viewBox="0 0 425.92 220.16"` and ids matching `app.js` |
 
@@ -171,12 +171,10 @@ emits `rotate(θ)` around the origin, which flings the ellipse off-canvas.
 - Real map embedded in `markers.svg`; 3 off-canvas ellipses (`el-4`,
   `ellipse3`, `ellipse6`) repaired — re-estimate positions by eye, they were
   guesses.
-- Answer animation placement: `popAnimation()` mapped the ellipse center
-  through `el.getCTM()` (viewport px) + `svg.getScreenCTM().inverse()` (screen
-  px) — mixing the two coordinate spaces shifted the ring/pop by the SVG's
-  page offset (header + margins), so it rendered off-center and was clipped
-  for ellipses near the canvas edges. Fixed by composing
-  `el.getCTM()` with `svg.getCTM().inverse()` (both in viewport px).
-  Verified numerically (simulated CTMs, plain/rotated/edge ellipses: exact
-  center, old formula off by ~230 viewBox units / off-canvas).
-- Not yet verified: visual/browser testing, final ellipse placement.
+- Answer animations: ring/pop are HTML divs in a `#fx-layer` overlay
+  (created in `init()`, positioned via `el.getScreenCTM()` relative to the
+  map container). They were originally `<circle>`/`<text>` appended to the
+  SVG, which Firefox paints **under** the SVG `<image>` (map) — invisible,
+  no console error. HTML overlay removes the dependency on SVG paint order.
+  Verified pixel-wise in headless Chrome 131 + 157 (correct: green ring + ✓,
+  wrong: red ring + ✗). Not yet verified: Firefox visual test.

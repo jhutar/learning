@@ -245,37 +245,43 @@ function finishSession() {
 
 // Answer animation: expanding ring + popping symbol over the given ellipse.
 // kind "correct" -> green ring + check; kind "wrong" -> red ring + cross.
+// Rendered in an HTML layer (#fx-layer) above the SVG, NOT inside the SVG:
+// some engines (Firefox) composite the SVG <image> over animated SVG
+// siblings, which hid the ring/pop under the map.
 function popAnimation(rangeIndex, kind = "correct") {
   const el = document.getElementById(RANGES[rangeIndex].id);
   const svg = document.getElementById("markers").querySelector("svg");
-  // Ellipse center (local cx/cy, may be rotated/moved) -> viewBox units.
-  // Both CTMs map to the element viewport's px, so el.getCTM() composes
-  // with svg.getCTM().inverse(). (Mixing getCTM with getScreenCTM adds the
-  // page offset of the svg and flings the ring off-center/clipped.)
+  const layer = document.getElementById("fx-layer");
+  // Ellipse center (local cx/cy, may be rotated/moved) -> viewport px.
   const pt = svg.createSVGPoint();
   pt.x = Number(el.getAttribute("cx"));
   pt.y = Number(el.getAttribute("cy"));
-  const p = pt.matrixTransform(el.getCTM()).matrixTransform(svg.getCTM().inverse());
-  const cx = p.x;
-  const cy = p.y;
-  const r = Math.max(el.getAttribute("rx"), el.getAttribute("ry")) + 6;
+  const p = pt.matrixTransform(el.getScreenCTM());
+  const lr = layer.getBoundingClientRect();
+  const x = p.x - lr.left;
+  const y = p.y - lr.top;
+  // viewBox units -> px (svg fills the container 1:1).
+  const scale = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+  const r = (Math.max(el.getAttribute("rx"), el.getAttribute("ry")) + 6) * scale;
 
-  const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  ring.setAttribute("cx", cx);
-  ring.setAttribute("cy", cy);
-  ring.setAttribute("r", r);
+  const ring = document.createElement("div");
   ring.classList.add("ring");
   if (kind === "wrong") ring.classList.add("ring-wrong");
+  ring.style.width = ring.style.height = 2 * r + "px";
+  ring.style.left = x - r + "px";
+  ring.style.top = y - r + "px";
+  ring.style.borderWidth = 3 * scale + "px";
 
-  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  text.setAttribute("x", cx);
-  text.setAttribute("y", cy - r);
+  const text = document.createElement("div");
   text.classList.add("pop");
   if (kind === "wrong") text.classList.add("pop-wrong");
+  text.style.fontSize = 30 * scale + "px";
+  text.style.left = x + "px";
+  text.style.top = y - r - 15 * scale + "px";
   text.textContent = kind === "wrong" ? "✗" : "✓";
 
-  svg.appendChild(ring);
-  svg.appendChild(text);
+  layer.appendChild(ring);
+  layer.appendChild(text);
   setTimeout(() => {
     ring.remove();
     text.remove();
@@ -288,6 +294,10 @@ async function init() {
   document.getElementById("markers").innerHTML = text;
   const svg = document.getElementById("markers").querySelector("svg");
   svg.classList.add("markers-svg");
+  // HTML layer above the SVG for answer animations (ring/pop divs).
+  const fx = document.createElement("div");
+  fx.id = "fx-layer";
+  document.getElementById("map-container").appendChild(fx);
   // href "world-map.jpg" is relative to assets/ (svg's folder), but after DOM
   // injection the browser resolves it against the page URL -> re-point it.
   svg.querySelector("image").setAttribute("href", "assets/world-map.jpg");
