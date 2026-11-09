@@ -50,15 +50,65 @@ Current ranges:
 |---|---|
 | `el-1` | Pobřežní nížina |
 | `el-2` | Skalnaté hory |
-| `el-3` | Kordiléry |
+| `el-3` | Kordilery |
 | `el-4` | Apalačské pohoří |
 | `el-5` | Mexická plošina |
 | `ellipse1` | Andy |
 | `ellipse2` | Amazonská nížina |
-| `ellipse3` | Brazilská nížina |
+| `ellipse3` | Brazilská vysočina |
 | `ellipse4` | Alpy |
 | `ellipse5` | Atlas |
 | `ellipse6` | Karpaty |
+| `ellipse7` | Velké předělové pohoří |
+| `ellipse8` | Artézská pánev |
+| `ellipse9` | Arktická nížina |
+| `ellipse10` | Pobřežní pásmo |
+| `ellipse11` | Velká pánev |
+| `ellipse12` | Velké planiny |
+| `ellipse13` | Laplacká nížina |
+| `ellipse14` | Guajanská vysočina |
+| `ellipse15` | Plošina Matto Gresso |
+| `ellipse16` | Dračí hory |
+| `ellipse17` | Plošina Lundakatanga |
+| `ellipse18` | Konžská pánev |
+| `ellipse19` | Plošina Arande |
+| `ellipse20` | Čadská pánev |
+| `ellipse21` | Východoafrická vysočina |
+| `ellipse22` | Tibesti |
+| `ellipse23` | Kavkaz |
+| `ellipse24` | Ural |
+| `ellipse25` | Saravát |
+| `ellipse26` | Zagros |
+| `ellipse27` | Elborz |
+| `ellipse28` | Íránská vysočina |
+| `ellipse29` | Plošina Ustjurt |
+| `ellipse30` | Východoevropská nížina |
+| `ellipse31` | Západosibiřská nížina |
+| `ellipse32` | Středosibiřská plošina |
+| `ellipse33` | Turanská nížina |
+| `ellipse34` | Verchojanské pohoří |
+| `ellipse35` | Pohoří Čerského |
+| `ellipse36` | Kolymské pohoří |
+| `ellipse37` | Korjacké pohoří |
+| `ellipse38` | Stanová vysočina |
+| `ellipse39` | Stanové pohoří |
+| `ellipse40` | Velký Chingan |
+| `ellipse41` | Sichote-Aliň |
+| `ellipse42` | Severočínská hornatina |
+| `ellipse43` | Velká Čínská nížina |
+| `ellipse44` | Jihočínská hornatina |
+| `ellipse45` | Jin-šan |
+| `ellipse46` | Kazašská plošina |
+| `ellipse47` | Pamír |
+| `ellipse48` | Hindůkůš |
+| `ellipse49` | Ťan šan |
+| `ellipse50` | Altaj |
+| `ellipse51` | Changaj |
+| `ellipse52` | Čchi-lien-šan |
+| `ellipse53` | Altyn-tagh |
+| `ellipse54` | Kchun-lun-šan |
+| `ellipse55` | Tibetská plošina |
+| `ellipse56` | Himaláj |
 
 Note: rotated ellipses must transform **around their own center**
 (`rotate(θ cx cy)` or a matrix with matching translation). Inkscape sometimes
