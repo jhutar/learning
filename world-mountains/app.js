@@ -1,11 +1,17 @@
 // Mountain ranges to train. `id` must match an ellipse id in assets/markers.svg.
 // To add a range: add one line here + one <ellipse id="el-N"> in the SVG.
 const RANGES = [
-  { id: "el-1", name: "Himalaya" },
-  { id: "el-2", name: "Andes" },
-  { id: "el-3", name: "Rockies" },
-  { id: "el-4", name: "Ural" },
-  { id: "el-5", name: "Alpen" },
+  { id: "el-1", name: "Pobřežní nížina" },
+  { id: "el-2", name: "Skalnaté hory" },
+  { id: "el-3", name: "Kordiléry" },
+  { id: "el-4", name: "Apalačské pohoří" },
+  { id: "el-5", name: "Mexická plošina" },
+  { id: "ellipse1", name: "Andy" },
+  { id: "ellipse2", name: "Amazonská nížina" },
+  { id: "ellipse3", name: "Brazilská nížina" },
+  { id: "ellipse4", name: "Alpy" },
+  { id: "ellipse5", name: "Atlas" },
+  { id: "ellipse6", name: "Karpaty" },
 ];
 
 const ASKS_PER_RANGE = 2; // scheduled questions per range per session
@@ -187,8 +193,14 @@ function finishSession() {
 function popAnimation(rangeIndex) {
   const el = document.getElementById(RANGES[rangeIndex].id);
   const svg = document.getElementById("markers").querySelector("svg");
-  const cx = el.getAttribute("cx");
-  const cy = el.getAttribute("cy");
+  // Ellipse may be rotated/moved by a transform -> map its local center to SVG coordinates.
+  const m = el.getCTM();
+  const pt = svg.createSVGPoint();
+  pt.x = el.getAttribute("cx");
+  pt.y = el.getAttribute("cy");
+  const p = pt.matrixTransform(m);
+  const cx = p.x;
+  const cy = p.y;
   const r = Math.max(el.getAttribute("rx"), el.getAttribute("ry")) + 6;
 
   const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");

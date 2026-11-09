@@ -39,36 +39,61 @@ cd world-mountains && python3 -m http.server 8000
 Two edits, nothing else:
 
 1. `app.js` — append to the `RANGES` array at the top:
-   `{ id: "el-6", name: "Karakorum" },`
-2. `assets/markers.svg` — add the ellipse (viewBox is `0 0 1000 500`,
-   equirectangular: `x = (lon + 180) / 360 * 1000`, `y = (90 - lat) / 180 * 500`):
-   `<ellipse id="el-6" cx="705" cy="165" rx="22" ry="12"/>`
+   `{ id: "ellipse7", name: "Karakorum" },`
+2. `assets/markers.svg` — add the ellipse (open in Inkscape, viewBox is
+   `0 0 425.92 220.16`, place by eye over the map):
+   `<ellipse id="ellipse7" cx="300" cy="80" rx="8" ry="5" fill="none" stroke="#000"/>`
 
-Current ranges: `el-1` Himalaya, `el-2` Andes, `el-3` Rockies, `el-4` Ural,
-`el-5` Alpen.
+Current ranges:
+
+| id | name |
+|---|---|
+| `el-1` | Pobřežní nížina |
+| `el-2` | Skalnaté hory |
+| `el-3` | Kordiléry |
+| `el-4` | Apalačské pohoří |
+| `el-5` | Mexická plošina |
+| `ellipse1` | Andy |
+| `ellipse2` | Amazonská nížina |
+| `ellipse3` | Brazilská nížina |
+| `ellipse4` | Alpy |
+| `ellipse5` | Atlas |
+| `ellipse6` | Karpaty |
+
+Note: rotated ellipses must transform **around their own center**
+(`rotate(θ cx cy)` or a matrix with matching translation). Inkscape sometimes
+emits `rotate(θ)` around the origin, which flings the ellipse off-canvas.
+`app.js` handles transformed ellipses for the correct-answer animation via
+`getCTM()`.
 
 ## Files
 
 | File | Role |
 |---|---|
-| `index.html` | Static page: header (stats + New session), map container, question bar, choice buttons, Next button, end overlay |
+| `index.html` | Static page: header (stats + New session), map container (SVG only, no `<img>`), question bar, choice buttons, Next button, end overlay |
 | `app.js` | All game logic. `RANGES` array + tunables (`ASKS_PER_RANGE`, `RETRY_GAP`, `CHOICE_COUNT`, `CORRECT_MS`) at top. State machine in `startSession` / `nextQuestion` / `handleAnswer` / `scheduleRetry` / `decrementPending` / `checkSessionEnd` |
 | `styles.css` | Layout + ellipse state classes (`candidate`, `dim`, `highlight`, `wrong`, `reveal`) + correct/wrong animations (`ring`, `pop`) |
-| `assets/world-map.jpg` | Background map, **placeholder** (blue grid, 2:1 aspect). Replace with a real no-letter world map |
-| `assets/markers.svg` | Ellipses positioned over the map, **placeholder** positions. Replace with real art; keep `viewBox="0 0 1000 500"` (or update both) and ids `el-1`…`el-N` matching `app.js` |
+| `assets/world-map.jpg` | Background map, embedded **inside** `markers.svg` via `<image xlink:href="world-map.jpg">` (1331x688). Not loaded separately by HTML |
+| `assets/markers.svg` | Map image + stroke-only ellipses (no fill). Keep `viewBox="0 0 425.92 220.16"` and ids matching `app.js` |
 
-## Replacing the placeholder art
+## Replacing the map art
 
-- `world-map.jpg`: any image, keep 2:1 aspect (or change `aspect-ratio` in
-  `styles.css` `#map-container`).
-- `markers.svg`: ellipses must keep their `id`s. If the real map uses a
-  different projection, positions must be matched by eye; the equirectangular
-  formula above only works for equirectangular maps.
+- `world-map.jpg`: swap the file, keep it next to `markers.svg` (same folder).
+  Keep the aspect ratio 1331:688 (same as the `markers.svg` viewBox), or
+  update `aspect-ratio` in `styles.css` `#map-container` — the SVG `<image>`
+  uses `preserveAspectRatio="none"` so it always stretches to fill the
+  container exactly.
+- `markers.svg`: ellipses must keep their `id`s. Positions are matched by eye
+  in Inkscape (the map is not a standard equirectangular projection).
 
 ## Intentional design decisions
 
-- `el-1`…`el-N` ids (not semantic ids) with the name mapping only in `app.js` —
-  chosen over `range-himalaya`-style ids.
+- Opaque-free `el-*` / `ellipse*` ids (not semantic ids) with the name mapping
+  only in `app.js` — chosen over `range-himalaya`-style ids.
+- Map lives inside `markers.svg` (not a separate `<img>` in HTML) so ellipse
+  positions always align with the map; single SVG fills the container.
+- Ellipses are stroke-only (no fill); all state styling in `styles.css`
+  overrides the inline `fill:none` via stroke color/width.
 - Question types are fully random; a range may be asked with the same type
   twice in a row (deliberate, not a bug).
 - Session can end before all 10 scheduled questions run — as soon as every
@@ -80,4 +105,7 @@ Current ranges: `el-1` Himalaya, `el-2` Andes, `el-3` Rockies, `el-4` Ural,
 - `node --check app.js` clean.
 - Logic simulation (5000 random sessions mirroring the state transitions): all
   terminated, all ranges correct at end, counters consistent.
-- Not yet verified: visual/browser testing, real map art.
+- Real map embedded in `markers.svg`; 3 off-canvas ellipses (`el-4`,
+  `ellipse3`, `ellipse6`) repaired — re-estimate positions by eye, they were
+  guesses.
+- Not yet verified: visual/browser testing, final ellipse placement.

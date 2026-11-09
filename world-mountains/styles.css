@@ -48,17 +48,11 @@ header button {
 
 #map-container {
   position: relative;
-  aspect-ratio: 2 / 1;
+  /* match map (1331x688), same AR as markers.svg viewBox 425.92x220.16 */
+  aspect-ratio: 1331 / 688;
   max-width: 1000px;
   width: calc(100% - 2rem);
   margin: 1rem auto 0;
-}
-
-#map-image {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border-radius: 8px;
 }
 
 #markers {
@@ -72,21 +66,22 @@ header button {
 }
 
 #markers ellipse {
-  fill: rgba(255, 255, 255, 0.45);
+  /* no fill, stroke-only markers */
+  fill: none;
   stroke: #33424c;
-  stroke-width: 2;
+  stroke-width: 2.5;
   pointer-events: none;
-  transition: fill 0.15s, opacity 0.15s;
+  transition: stroke 0.15s, opacity 0.15s;
 }
 
 #markers ellipse.candidate {
   pointer-events: all;
   cursor: pointer;
-  fill: rgba(255, 235, 130, 0.65);
+  stroke: #d99a00;
 }
 
 #markers ellipse.candidate:hover {
-  fill: rgba(110, 195, 255, 0.8);
+  stroke: #1c6fb0;
 }
 
 #markers ellipse.dim {
@@ -94,21 +89,18 @@ header button {
 }
 
 #markers ellipse.highlight {
-  fill: rgba(255, 180, 0, 0.85);
-  stroke: #7a4a00;
-  stroke-width: 3;
+  stroke: #ff9500;
+  stroke-width: 4;
 }
 
 #markers ellipse.wrong {
-  fill: rgba(230, 60, 60, 0.85);
-  stroke: #7a0000;
-  stroke-width: 3;
+  stroke: #e03c3c;
+  stroke-width: 4;
 }
 
 #markers ellipse.reveal {
-  fill: rgba(60, 200, 90, 0.85);
-  stroke: #0a5c2a;
-  stroke-width: 3;
+  stroke: #2eb85c;
+  stroke-width: 4;
 }
 
 .ring {
