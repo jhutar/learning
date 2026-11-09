@@ -249,12 +249,13 @@ function popAnimation(rangeIndex, kind = "correct") {
   const el = document.getElementById(RANGES[rangeIndex].id);
   const svg = document.getElementById("markers").querySelector("svg");
   // Ellipse center (local cx/cy, may be rotated/moved) -> viewBox units.
-  // getCTM() lands in viewport pixels; map back through the root svg's
-  // screen CTM or the ring ends up scaled off-canvas and gets clipped.
+  // Both CTMs map to the element viewport's px, so el.getCTM() composes
+  // with svg.getCTM().inverse(). (Mixing getCTM with getScreenCTM adds the
+  // page offset of the svg and flings the ring off-center/clipped.)
   const pt = svg.createSVGPoint();
-  pt.x = el.getAttribute("cx");
-  pt.y = el.getAttribute("cy");
-  const p = pt.matrixTransform(el.getCTM()).matrixTransform(svg.getScreenCTM().inverse());
+  pt.x = Number(el.getAttribute("cx"));
+  pt.y = Number(el.getAttribute("cy"));
+  const p = pt.matrixTransform(el.getCTM()).matrixTransform(svg.getCTM().inverse());
   const cx = p.x;
   const cy = p.y;
   const r = Math.max(el.getAttribute("rx"), el.getAttribute("ry")) + 6;

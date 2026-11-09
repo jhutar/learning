@@ -171,4 +171,12 @@ emits `rotate(θ)` around the origin, which flings the ellipse off-canvas.
 - Real map embedded in `markers.svg`; 3 off-canvas ellipses (`el-4`,
   `ellipse3`, `ellipse6`) repaired — re-estimate positions by eye, they were
   guesses.
+- Answer animation placement: `popAnimation()` mapped the ellipse center
+  through `el.getCTM()` (viewport px) + `svg.getScreenCTM().inverse()` (screen
+  px) — mixing the two coordinate spaces shifted the ring/pop by the SVG's
+  page offset (header + margins), so it rendered off-center and was clipped
+  for ellipses near the canvas edges. Fixed by composing
+  `el.getCTM()` with `svg.getCTM().inverse()` (both in viewport px).
+  Verified numerically (simulated CTMs, plain/rotated/edge ellipses: exact
+  center, old formula off by ~230 viewBox units / off-canvas).
 - Not yet verified: visual/browser testing, final ellipse placement.
