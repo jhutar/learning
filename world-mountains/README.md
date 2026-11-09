@@ -13,6 +13,19 @@ cd world-mountains && python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Local debugging
+
+- Serve over HTTP (see above) and open `http://localhost:8000` — opening
+  `index.html` via `file://` fails (`fetch()` is blocked, NetworkError).
+- Port taken -> `python3 -m http.server 8080` (any free port); stop with `Ctrl+C`.
+- No build step and no auto-reload: after editing `app.js` / `styles.css` /
+  `assets/markers.svg`, refresh the page (`F5`).
+- Console + DOM: DevTools `Ctrl+Shift+I`.
+- Quick sanity check after editing: `node --check app.js`.
+- `init()` fetches `assets/markers.svg` at runtime — SVG edits only take
+  effect after refresh; the map `<image>` href is re-pointed to
+  `assets/world-map.jpg` in JS (relative-to-page, not relative-to-svg).
+
 ## Game rules (agreed spec)
 
 - **Session** starts automatically on page load. Each range is scheduled

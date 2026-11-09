@@ -150,13 +150,16 @@ function renderQuestion() {
   document.getElementById("question").textContent =
     q.type === 1 ? "Which range is highlighted?" : "Where is " + RANGES[q.target].name + "?";
 
-  q.options.forEach((i) => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.textContent = RANGES[i].name;
-    b.addEventListener("click", () => handleAnswer(i));
-    choices.appendChild(b);
-  });
+  // Name buttons only exist for type 1; types 2/3 are answered by map click.
+  if (q.options) {
+    q.options.forEach((i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = RANGES[i].name;
+      b.addEventListener("click", () => handleAnswer(i));
+      choices.appendChild(b);
+    });
+  }
 
   RANGES.forEach((r, i) => {
     const el = document.getElementById(r.id);
@@ -194,7 +197,7 @@ function handleAnswer(chosen) {
     document.getElementById(RANGES[chosen].id).classList.add("wrong");
     document.getElementById(RANGES[q.target].id).classList.add("reveal");
     document.getElementById("question").textContent = "Wrong. Correct answer: " + RANGES[q.target].name + ".";
-    popAnimation(q.target);
+    popAnimation(chosen, "wrong");
     scheduleRetry(q.target);
     document.getElementById("btn-next").hidden = false;
   }
@@ -239,16 +242,18 @@ function finishSession() {
   document.getElementById("overlay").hidden = false;
 }
 
-// Correct-answer animation: expanding green ring + popping checkmark.
-function popAnimation(rangeIndex) {
+// Answer animation: expanding ring + popping symbol over the given ellipse.
+// kind "correct" -> green ring + check; kind "wrong" -> red ring + cross.
+function popAnimation(rangeIndex, kind = "correct") {
   const el = document.getElementById(RANGES[rangeIndex].id);
   const svg = document.getElementById("markers").querySelector("svg");
-  // Ellipse may be rotated/moved by a transform -> map its local center to SVG coordinates.
-  const m = el.getCTM();
+  // Ellipse center (local cx/cy, may be rotated/moved) -> viewBox units.
+  // getCTM() lands in viewport pixels; map back through the root svg's
+  // screen CTM or the ring ends up scaled off-canvas and gets clipped.
   const pt = svg.createSVGPoint();
   pt.x = el.getAttribute("cx");
   pt.y = el.getAttribute("cy");
-  const p = pt.matrixTransform(m);
+  const p = pt.matrixTransform(el.getCTM()).matrixTransform(svg.getScreenCTM().inverse());
   const cx = p.x;
   const cy = p.y;
   const r = Math.max(el.getAttribute("rx"), el.getAttribute("ry")) + 6;
@@ -258,12 +263,14 @@ function popAnimation(rangeIndex) {
   ring.setAttribute("cy", cy);
   ring.setAttribute("r", r);
   ring.classList.add("ring");
+  if (kind === "wrong") ring.classList.add("ring-wrong");
 
   const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
   text.setAttribute("x", cx);
   text.setAttribute("y", cy - r);
   text.classList.add("pop");
-  text.textContent = "✓";
+  if (kind === "wrong") text.classList.add("pop-wrong");
+  text.textContent = kind === "wrong" ? "✗" : "✓";
 
   svg.appendChild(ring);
   svg.appendChild(text);
@@ -279,6 +286,12 @@ async function init() {
   document.getElementById("markers").innerHTML = text;
   const svg = document.getElementById("markers").querySelector("svg");
   svg.classList.add("markers-svg");
+  // href "world-map.jpg" is relative to assets/ (svg's folder), but after DOM
+  // injection the browser resolves it against the page URL -> re-point it.
+  svg.querySelector("image").setAttribute("href", "assets/world-map.jpg");
+  // Inline style attrs (Inkscape exports them) would beat the state classes
+  // in styles.css -> strip them so .highlight/.candidate/.wrong etc. apply.
+  svg.querySelectorAll("ellipse").forEach((el) => el.removeAttribute("style"));
 
   RANGES.forEach((r, i) =>
     document.getElementById(r.id).addEventListener("click", () => handleEllipseClick(i))

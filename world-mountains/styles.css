@@ -77,7 +77,7 @@ header button {
 #markers ellipse.candidate {
   pointer-events: all;
   cursor: pointer;
-  stroke: #d99a00;
+  stroke: #8338ec;
 }
 
 #markers ellipse.candidate:hover {
@@ -90,7 +90,7 @@ header button {
 
 #markers ellipse.highlight {
   stroke: #ff9500;
-  stroke-width: 4;
+  stroke-width: 3;
 }
 
 #markers ellipse.wrong {
@@ -112,6 +112,10 @@ header button {
   animation: ring 0.7s ease-out forwards;
 }
 
+.ring-wrong {
+  stroke: #e03c3c;
+}
+
 @keyframes ring {
   from {
     transform: scale(0.6);
@@ -131,6 +135,10 @@ header button {
   transform-box: fill-box;
   transform-origin: center;
   animation: pop 0.7s ease-out forwards;
+}
+
+.pop-wrong {
+  fill: #e03c3c;
 }
 
 @keyframes pop {
