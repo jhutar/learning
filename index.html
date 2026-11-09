@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning — Projects</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --fg: #1a1a2e;
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fg: #e5e7eb;
+        --bg: #111827;
+        --card: #1f2937;
+        --accent: #60a5fa;
+        --muted: #9ca3af;
+        --border: #374151;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 2rem 1rem 4rem;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin: 0 0 0.25rem; }
+    .subtitle { color: var(--muted); margin: 0 0 2rem; }
+    .project {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .project:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .project h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .project p { margin: 0.5rem 0 0; color: var(--muted); }
+    .project .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0 0.5rem;
+      margin-top: 0.6rem;
+    }
+    footer {
+      margin-top: 2.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer code { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 0 0.3rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Learning</h1>
+    <p class="subtitle">Personal learning projects. Add a new entry below when you push a new one.</p>
+
+    <!-- Add new projects here, newest first. -->
+    <a class="project" href="world-mountains/">
+      <h2>World Mountains Trainer</h2>
+      <p>Frontend-only game for training the geographic location of the world's biggest mountain ranges and terrain features.</p>
+      <span class="tag">HTML / CSS / JS</span>
+    </a>
+
+    <footer>
+      Deployed via GitHub Pages from <code>main</code>. Root <code>index.html</code> serves as the hub page —
+      link every new project from here.
+    </footer>
+  </div>
+</body>
+</html>
